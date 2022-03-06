@@ -12,18 +12,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = void 0;
+exports.register = exports.login = void 0;
+const encryptPassword_1 = require("../../helpers/encryptPassword");
 const UserDao_1 = require("../../models/dao/UserDao");
 const User_1 = __importDefault(require("../../models/User"));
 const userDao = new UserDao_1.UserDao();
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const username = 'test';
+const login = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    const user = new User_1.default(username, email, password);
-    yield userDao.saveUser(user);
-    res.json({
-        msg: 'done',
+    userDao.login(email, password).then((result) => {
+        res.json({
+            result: result,
+        });
+    })
+        .catch(() => {
+        res.json({
+            error: 'error trying to login',
+        });
+    });
+};
+exports.login = login;
+const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { username, email, password } = req.body;
+    let user;
+    try {
+        password = yield (0, encryptPassword_1.encryptPassword)(password);
+    }
+    catch (err) {
+        res.json({
+            error: err
+        });
+    }
+    user = new User_1.default(username, email, password);
+    userDao.register(user).then((userInserted) => {
+        res.json({
+            msg: 'user has been created',
+            user: userInserted,
+        });
+    })
+        .catch((err) => {
+        res.status(400).json({
+            msg: 'error trying to register user',
+            error: err,
+        });
     });
 });
-exports.login = login;
+exports.register = register;
