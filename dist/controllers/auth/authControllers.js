@@ -14,15 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = exports.login = void 0;
 const encryptPassword_1 = require("../../helpers/encryptPassword");
+const getToken_1 = __importDefault(require("../../helpers/getToken"));
 const UserDao_1 = require("../../models/dao/UserDao");
 const User_1 = __importDefault(require("../../models/User"));
 const userDao = new UserDao_1.UserDao();
-const login = (req, res) => {
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
+    console.log('-->', email, password);
     userDao.login(email, password).then((result) => {
+        if (result === null || result === undefined) {
+            return res.status(400).json({
+                msg: 'User/Password could be wrong',
+            });
+        }
+        const token = (0, getToken_1.default)(result._id);
         res.json({
-            result: result,
+            token: token,
+            user: result,
         });
     })
         .catch(() => {
@@ -30,7 +39,7 @@ const login = (req, res) => {
             error: 'error trying to login',
         });
     });
-};
+});
 exports.login = login;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { username, email, password } = req.body;

@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const authRouter_1 = __importDefault(require("../routers/auth/authRouter"));
 const mongoConfig_1 = require("../db/mongoConfig");
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 class Server {
     constructor() {
@@ -38,6 +39,7 @@ class Server {
         });
     }
     routes() {
+        this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(this.paths.authPath, authRouter_1.default);
     }

@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import User from '../models/User';
 
 const encryptPassword = (password:string)=> {
 	return new Promise((resolve, reject) => {
@@ -17,6 +18,20 @@ const encryptPassword = (password:string)=> {
 	});
 }
 
+const comparePasswords = async (password:string, encryptedPassword:string ):Promise<boolean> => {
+	try {
+		const match:boolean = await bcrypt.compare(password, encryptedPassword);
+		if(match === true) {
+			return true;
+		}
+		return false;
+	} catch(err) {
+		console.log(err);
+		return false;
+	}
+}
+
 export {
 	encryptPassword,
+	comparePasswords,
 }

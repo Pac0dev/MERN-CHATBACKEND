@@ -1,4 +1,5 @@
 import {db} from "../../db/mongoConfig";
+import {comparePasswords} from "../../helpers/encryptPassword";
 import User from "../User";
 
 interface IUserDao{
@@ -23,13 +24,18 @@ class UserDao implements IUserDao{
 		}
 	}
 	async login(email:string, password:string):Promise<any> {
-		const query = {
-			email: email,
-			password: password,
-		};
 		try {
-			const userFound = await db.collection(collectionName).findOne(query);
-			return userFound;
+			//we find the user by email
+			const userFound = await db.collection(collectionName).findOne({email: email});
+			let match:boolean;
+			if(userFound !== null) {
+				//this function compare the password sent in body with the user found with email
+				match = await comparePasswords(password, userFound.password); 
+				if(match === true ) {
+					return userFound;
+				}
+			}
+			return null;
 		} catch ( err ) {
 			console.log(err);
 			return err;
@@ -42,7 +48,7 @@ class UserDao implements IUserDao{
 
 		try {
 			const userFound = await db.collection(collectionName).findOne(query);
-			return userFound;
+			return userFound?.email;
 		} catch( err ) {
 			return err;
 		}

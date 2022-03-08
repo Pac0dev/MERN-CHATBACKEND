@@ -1,17 +1,25 @@
 import express from 'express';
 import {encryptPassword} from '../../helpers/encryptPassword';
+import getToken from '../../helpers/getToken';
 import {UserDao} from '../../models/dao/UserDao';
 import User from '../../models/User';
 
 const userDao = new UserDao();
 
-const login = (req:express.Request, res: express.Response) => {
+const login = async (req:express.Request, res: express.Response) => {
 	const email:string = req.body.email;
 	const password:string = req.body.password;
 	
 	userDao.login(email, password).then((result) => {
+		if(result === null || result === undefined) {
+			return res.status(400).json({
+				msg: 'User/Password could be wrong',
+			});
+		}
+		const token = getToken(result._id);
 		res.json({
-			result: result,
+			token: token,
+			user: result,
 		});
 	})
 	.catch(() => {

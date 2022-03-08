@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import router from '../routers/auth/authRouter';
 import {connectMongo} from '../db/mongoConfig';
+import cors from 'cors';
 dotenv.config();
 
 class Server {
@@ -28,6 +29,7 @@ class Server {
 		await connectMongo();
 	}
 	routes() {
+		this.app.use(cors());
 		this.app.use(express.json());
 		this.app.use(this.paths.authPath, router);
 	}
