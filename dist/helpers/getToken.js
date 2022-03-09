@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const getToken = (uid) => {
+const getToken = (_id) => {
     const payload = {
-        uid,
+        "_id": _id,
     };
-    const token = jsonwebtoken_1.default.sign(payload, process.env.PORT, { expiresIn: (3600 * 2) });
+    const token = jsonwebtoken_1.default.sign(payload, process.env.SECRET_SEED, {
+        expiresIn: 3600 * 2,
+    });
     return token;
 };
 exports.default = getToken;

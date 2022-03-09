@@ -21,7 +21,6 @@ const userDao = new UserDao_1.UserDao();
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
-    console.log('-->', email, password);
     userDao.login(email, password).then((result) => {
         if (result === null || result === undefined) {
             return res.status(400).json({

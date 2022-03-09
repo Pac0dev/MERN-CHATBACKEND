@@ -1,3 +1,4 @@
+import {ObjectID} from "bson";
 import {db} from "../../db/mongoConfig";
 import {comparePasswords} from "../../helpers/encryptPassword";
 import User from "../User";
@@ -6,6 +7,7 @@ interface IUserDao{
 	register(user:User):Promise<any>;
 	login(email:string, password:string):Promise<any>;
 	findByEmail(email:string):Promise<any>;
+	findById(id:string):Promise<any>;
 }
 
 const collectionName = 'user';
@@ -50,6 +52,17 @@ class UserDao implements IUserDao{
 			const userFound = await db.collection(collectionName).findOne(query);
 			return userFound?.email;
 		} catch( err ) {
+			return err;
+		}
+	}
+	async findById(id:string):Promise<any> {
+		const query = {
+			"_id": new ObjectID(id),
+		};
+		try {
+			const userFound = await db.collection(collectionName).findOne(query);
+			return userFound;
+		} catch ( err ) {
 			return err;
 		}
 	}

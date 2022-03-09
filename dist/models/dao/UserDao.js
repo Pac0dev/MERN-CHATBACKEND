@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserDao = void 0;
+const bson_1 = require("bson");
 const mongoConfig_1 = require("../../db/mongoConfig");
 const encryptPassword_1 = require("../../helpers/encryptPassword");
 const collectionName = 'user';
@@ -59,6 +60,20 @@ class UserDao {
             try {
                 const userFound = yield mongoConfig_1.db.collection(collectionName).findOne(query);
                 return userFound === null || userFound === void 0 ? void 0 : userFound.email;
+            }
+            catch (err) {
+                return err;
+            }
+        });
+    }
+    findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const query = {
+                "_id": new bson_1.ObjectID(id),
+            };
+            try {
+                const userFound = yield mongoConfig_1.db.collection(collectionName).findOne(query);
+                return userFound;
             }
             catch (err) {
                 return err;
