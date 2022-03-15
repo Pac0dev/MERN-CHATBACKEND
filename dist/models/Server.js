@@ -15,22 +15,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const authRouter_1 = __importDefault(require("../routers/auth/authRouter"));
+const chatRouter_1 = __importDefault(require("../routers/chat/chatRouter"));
 const mongoConfig_1 = require("../db/mongoConfig");
 const cors_1 = __importDefault(require("cors"));
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = require("socket.io");
+const socketController_1 = __importDefault(require("../controllers/sockets/socketController"));
 dotenv_1.default.config();
-class Server {
+class ServerModel {
     constructor() {
         this.app = (0, express_1.default)();
-        this.PORT = process.env.PORT || '8080';
+        this.httpServer = http_1.default.createServer(this.app);
+        this.io = new socket_io_1.Server(this.httpServer, {
+            cors: {
+                origin: "*",
+            },
+        });
+        this.PORT = process.env.PORT || "8080";
         this.paths = {
-            authPath: '/api/auth',
+            authPath: "/api/auth",
+            chatPath: "/api/chat",
         };
         this.dbInit();
         this.routes();
+        this.sockets();
     }
     init() {
-        this.app.listen(this.PORT, () => {
-            console.log('running server at', this.PORT);
+        this.httpServer.listen(this.PORT, () => {
+            console.log("running server at", this.PORT);
         });
     }
     dbInit() {
@@ -42,6 +54,10 @@ class Server {
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(this.paths.authPath, authRouter_1.default);
+        this.app.use(this.paths.chatPath, chatRouter_1.default);
+    }
+    sockets() {
+        this.io.on('connection', (socket) => (0, socketController_1.default)(socket, this.io));
     }
 }
-exports.default = Server;
+exports.default = ServerModel;

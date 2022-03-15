@@ -27,7 +27,7 @@ class UserDao {
                 }
             }
             catch (err) {
-                console.log(err);
+                return err;
             }
         });
     }
@@ -47,7 +47,6 @@ class UserDao {
                 return null;
             }
             catch (err) {
-                console.log(err);
                 return err;
             }
         });

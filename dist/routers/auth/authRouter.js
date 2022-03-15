@@ -8,7 +8,6 @@ const express_validator_1 = require("express-validator");
 const authControllers_1 = require("../../controllers/auth/authControllers");
 const isValidBody_1 = require("../../helpers/isValidBody");
 const isValidEmail_1 = __importDefault(require("../../helpers/isValidEmail"));
-const verifyToken_1 = __importDefault(require("../../helpers/verifyToken"));
 const router = (0, express_1.Router)();
 router.post('/login', [
     (0, express_validator_1.check)('email').isEmail().normalizeEmail(),
@@ -22,13 +21,4 @@ router.post('/register', [
     isValidEmail_1.default,
     isValidBody_1.isValidBody
 ], authControllers_1.register);
-router.get('/test', [
-    (0, express_validator_1.check)('token').not().isEmpty(),
-    verifyToken_1.default,
-    isValidBody_1.isValidBody,
-], (req, res) => {
-    res.json({
-        msg: 'ok',
-    });
-});
 exports.default = router;

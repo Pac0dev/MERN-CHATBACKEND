@@ -22,7 +22,7 @@ class UserDao implements IUserDao{
 				return err;
 			}
 		} catch( err ) {
-			console.log(err);
+			return err;
 		}
 	}
 	async login(email:string, password:string):Promise<any> {
@@ -39,7 +39,6 @@ class UserDao implements IUserDao{
 			}
 			return null;
 		} catch ( err ) {
-			console.log(err);
 			return err;
 		}
 	}

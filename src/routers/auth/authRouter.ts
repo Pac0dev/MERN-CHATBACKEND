@@ -21,15 +21,5 @@ router.post('/register', [
 	isValidBody
 ], register);
 
-// router.get('/test', [
-// 	check('token').not().isEmpty(),
-// 	verifyToken,
-// 	isValidBody,
-// ], (req:any, res:any) => {
-// 	res.json({
-// 		msg: 'ok',
-// 	});
-// })
-
 
 export default router;

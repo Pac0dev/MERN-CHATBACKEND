@@ -12,26 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const UserDao_1 = require("../models/dao/UserDao");
-const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.token;
-    const userDao = new UserDao_1.UserDao();
-    let payload;
+exports.getChannels = void 0;
+const ChatDao_1 = __importDefault(require("../../models/dao/ChatDao"));
+const getChannels = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const chatDao = new ChatDao_1.default();
     try {
-        //we need catch the error when token is wrong
-        payload = jsonwebtoken_1.default.verify(token, process.env.SECRET_SEED);
-        const { _id } = payload;
-        const user = yield userDao.findById(_id);
-        if (user === null)
-            return res.status(400).json({ msg: 'the user is not valid please log again' });
-        req.body.user = user;
-        next();
+        const channels = yield chatDao.getChatsById(req.body.user._id);
+        return res.status(200).json({
+            channels,
+        });
     }
     catch (err) {
-        return res.status(500).json({
-            msg: 'error in jwt verifying'
+        res.status(500).json({
+            error: err,
         });
     }
 });
-exports.default = verifyToken;
+exports.getChannels = getChannels;
