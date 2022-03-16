@@ -8,6 +8,7 @@ interface IUserDao{
 	login(email:string, password:string):Promise<any>;
 	findByEmail(email:string):Promise<any>;
 	findById(id:string):Promise<any>;
+	findByName(name:string):Promise<any>;
 }
 
 const collectionName = 'user';
@@ -62,6 +63,21 @@ class UserDao implements IUserDao{
 			const userFound = await db.collection(collectionName).findOne(query);
 			return userFound;
 		} catch ( err ) {
+			return err;
+		}
+	}
+	async findByName(name: string): Promise<any> {
+		const query = {
+			name: name,
+		};
+
+		try {
+			const userFound = await db.collection(collectionName).findOne(query);
+			if(userFound !== null || userFound !== undefined) {
+				return userFound?._id;
+			}
+			return userFound;
+		} catch( err ) {
 			return err;
 		}
 	}

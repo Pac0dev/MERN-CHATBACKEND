@@ -24,7 +24,7 @@ const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         const { _id } = payload;
         const user = yield userDao.findById(_id);
         if (user === null)
-            return res.status(400).json({ msg: 'the user is not valid please log again' });
+            return res.status(401).json({ msg: 'the user is not valid please log again' });
         req.body.user = user;
         next();
     }

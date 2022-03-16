@@ -13,6 +13,39 @@ const mongodb_1 = require("mongodb");
 const mongoConfig_1 = require("../../db/mongoConfig");
 const collectionName = "channel";
 class ChatDao {
+    addNewUserToChannel(user, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const query = {
+                _id: new mongodb_1.ObjectId(id)
+            };
+            const updatedField = {
+                $push: { users: user }
+            };
+            try {
+                const updatedChannel = yield mongoConfig_1.db.collection(collectionName).updateOne(query, updatedField);
+                return updatedChannel;
+            }
+            catch (err) {
+                return err;
+            }
+        });
+    }
+    createChannel(name, desc, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const channel = {
+                name,
+                desc,
+                users: [{ user: new mongodb_1.ObjectId(id) }]
+            };
+            try {
+                const newChannel = yield mongoConfig_1.db.collection(collectionName).insertOne(channel);
+                return newChannel;
+            }
+            catch (err) {
+                return err;
+            }
+        });
+    }
     getChatsById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

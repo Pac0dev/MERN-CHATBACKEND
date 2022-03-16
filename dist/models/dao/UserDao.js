@@ -79,5 +79,22 @@ class UserDao {
             }
         });
     }
+    findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const query = {
+                name: name,
+            };
+            try {
+                const userFound = yield mongoConfig_1.db.collection(collectionName).findOne(query);
+                if (userFound !== null || userFound !== undefined) {
+                    return userFound === null || userFound === void 0 ? void 0 : userFound._id;
+                }
+                return userFound;
+            }
+            catch (err) {
+                return err;
+            }
+        });
+    }
 }
 exports.UserDao = UserDao;

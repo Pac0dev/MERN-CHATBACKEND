@@ -12,7 +12,7 @@ const verifyToken = async (req:express.Request, res:express.Response, next:any) 
 		const {_id} = payload;
 
 		const user = await userDao.findById(_id);
-		if(user === null) return res.status(400).json({msg: 'the user is not valid please log again'})
+		if(user === null) return res.status(401).json({msg: 'the user is not valid please log again'})
 
 		req.body.user = user;
 		next();
