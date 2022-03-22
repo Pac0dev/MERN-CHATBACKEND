@@ -16,7 +16,7 @@ const login = async (req:express.Request, res: express.Response) => {
 				msg: 'User/Password could be wrong',
 			});
 		}
-		const token = getToken(result._id);
+		const token = getToken(result._id, result.username);
 		res.json({
 			token: token,
 			user: result,

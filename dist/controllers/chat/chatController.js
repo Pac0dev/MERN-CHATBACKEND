@@ -18,8 +18,10 @@ const chatDao = new ChatDao_1.default();
 const getChannels = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const channels = yield chatDao.getChatsById(req.body.user._id);
+        const { username, _id } = req.body.user;
         return res.status(200).json({
             channels,
+            user: { username, _id },
         });
     }
     catch (err) {
@@ -36,6 +38,7 @@ const createChannel = (req, res) => {
         .then((channel) => {
         res.json({
             channel,
+            user,
         });
     })
         .catch((err) => {
@@ -46,17 +49,17 @@ const createChannel = (req, res) => {
 };
 exports.createChannel = createChannel;
 const addNewUser = (req, res) => {
-    const { userId, channelId, username } = req.body;
+    const { userId, channelId } = req.body;
     chatDao
         .addNewUserToChannel({ user: userId }, channelId)
-        .then((channel) => {
+        .then((channel) => __awaiter(void 0, void 0, void 0, function* () {
         res.json({
             channel,
         });
-    })
+    }))
         .catch((error) => {
         res.status(500).json({
-            msg: "failed to add user: " + username,
+            msg: "failed to add user: " + userId,
             error,
         });
     });

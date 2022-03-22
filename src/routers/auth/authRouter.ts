@@ -8,6 +8,7 @@ import verifyToken from '../../helpers/verifyToken';
 const router = Router();
 
 router.post('/login', [
+	check('email', 'email is a must').not().isEmpty(),
 	check('email').isEmail().normalizeEmail(),
 	check('password').not().isEmpty(),
 	isValidBody

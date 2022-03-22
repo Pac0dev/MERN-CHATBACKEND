@@ -31,19 +31,21 @@ class ChatDao {
         });
     }
     createChannel(name, desc, id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const channel = {
-                name,
-                desc,
-                users: [{ user: new mongodb_1.ObjectId(id) }]
-            };
-            try {
-                const newChannel = yield mongoConfig_1.db.collection(collectionName).insertOne(channel);
-                return newChannel;
-            }
-            catch (err) {
-                return err;
-            }
+        const channel = {
+            name,
+            desc,
+            users: [{ user: new mongodb_1.ObjectId(id) }]
+        };
+        return new Promise((resolve, reject) => {
+            mongoConfig_1.db.collection(collectionName).insertOne(channel, (error, result) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    console.log(result);
+                    resolve(result);
+                }
+            });
         });
     }
     getChatsById(id) {

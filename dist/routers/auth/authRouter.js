@@ -10,6 +10,7 @@ const isValidBody_1 = require("../../helpers/isValidBody");
 const isValidEmail_1 = __importDefault(require("../../helpers/isValidEmail"));
 const router = (0, express_1.Router)();
 router.post('/login', [
+    (0, express_validator_1.check)('email', 'email is a must').not().isEmpty(),
     (0, express_validator_1.check)('email').isEmail().normalizeEmail(),
     (0, express_validator_1.check)('password').not().isEmpty(),
     isValidBody_1.isValidBody

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getIdByToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UserDao_1 = require("../models/dao/UserDao");
 const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,4 +35,17 @@ const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         });
     }
 });
+const getIdByToken = (token) => {
+    try {
+        const payload = jsonwebtoken_1.default.verify(token, process.env.SECRET_SEED);
+        if (payload._id) {
+            return payload._id;
+        }
+        return -1;
+    }
+    catch (err) {
+        console.log(err);
+    }
+};
+exports.getIdByToken = getIdByToken;
 exports.default = verifyToken;

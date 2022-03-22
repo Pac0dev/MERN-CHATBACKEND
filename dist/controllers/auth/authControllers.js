@@ -27,7 +27,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 msg: 'User/Password could be wrong',
             });
         }
-        const token = (0, getToken_1.default)(result._id);
+        const token = (0, getToken_1.default)(result._id, result.username);
         res.json({
             token: token,
             user: result,

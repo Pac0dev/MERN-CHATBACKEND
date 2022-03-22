@@ -25,18 +25,22 @@ class ChatDao implements IChatDao {
 			return err;
 		}
 	}
-	async createChannel(name: string, desc: string, id:string): Promise<any> {
+	createChannel(name: string, desc: string, id:string): Promise<any> {
 		const channel = {
 			name,
 			desc,
 			users: [{user: new ObjectId(id)}]
 		};
-		try {
-			 const newChannel = await db.collection(collectionName).insertOne(channel);
-			 return newChannel;
-		} catch ( err ) {
-			return err;
-		}		
+		return new Promise((resolve:any, reject:any) => {
+		 db.collection(collectionName).insertOne(channel, (error:any, result:any) => {
+				if( error ) {
+					reject(error);
+				} else {
+					console.log(result);
+					resolve(result)
+				}
+			})
+		});
 	}
     async getChatsById(id: string): Promise<any> {
         try {

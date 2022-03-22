@@ -22,4 +22,21 @@ const verifyToken = async (req:express.Request, res:express.Response, next:any) 
 		});
 	}
 };
+
+const getIdByToken = (token:string) => {
+	try {
+		const payload = jwt.verify(token, process.env.SECRET_SEED as string) as jwt.JwtPayload;
+		if(payload._id) {
+			return payload._id;
+		}
+		return -1;
+	} catch ( err ) {
+		console.log(err);
+	}
+}
+
+export {
+	getIdByToken,
+}
+
 export default verifyToken;

@@ -23,10 +23,10 @@ router.post('/create-channel', [
 
 router.put('/update/new-user', [
 	check('token', 'the token is a must').not().isEmpty(),
-	check('username', 'the name of the channel is a must').not().isEmpty(),
+	check('userId', 'the id of the user is a must').not().isEmpty(),
+	check('userId', 'the id of the user is not valid').isMongoId(),
 	check('channelId', 'channel id is a must').not().isEmpty(),
 	check('channelId', 'Not valid mongoID').isMongoId(),
-	isValidUsername,
 	verifyToken,
 	isValidBody,
 ], addNewUser);
